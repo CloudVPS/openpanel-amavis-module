@@ -1,0 +1,26 @@
+<xml.schema>
+
+	<xml.class name="openpanel.module.awstats">
+		<xml.type>dict</xml.type>
+		<xml.proplist>
+			<xml.member class="config"	id="config"/>
+		</xml.proplist>
+	</xml.class>
+
+	<xml.class name="config">
+		<xml.type>dict</xml.type>
+		<xml.proplist>
+			<xml.member class="amavis:dbfile"		id="amavis:dbfile"/>
+			<xml.member class="postfix:accessfile"	id="postfix:accessfile"/>
+		</xml.proplist>
+	</xml.class>
+	
+	<xml.class name="amavis:dbfile">
+		<xml.type>string</xml.type>
+	</xml.class>
+
+	<xml.class name="postfix:accessfile">
+		<xml.type>string</xml.type>
+	</xml.class>
+	
+</xml.schema>

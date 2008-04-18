@@ -1,0 +1,18 @@
+@lookup_sql_dsn =
+     ( ["DBI:SQLite:dbname=/etc/openpanel/amavis/amavis.db", '', ''] );
+ 
+$notify_method  = 'smtp:[127.0.0.1]:10025';
+$forward_method = 'smtp:[127.0.0.1]:10025';  # set to undef with milter!
+use strict;
+
+@bypass_virus_checks_maps = (
+   \%bypass_virus_checks, \@bypass_virus_checks_acl, \$bypass_virus_checks_re);
+
+
+@bypass_spam_checks_maps = (
+   \%bypass_spam_checks, \@bypass_spam_checks_acl, \$bypass_spam_checks_re);
+
+$final_spam_destiny = D_PASS;
+$final_virus_destiny = D_DISCARD;
+
+1;  # insure a defined return

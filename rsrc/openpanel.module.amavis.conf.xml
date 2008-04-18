@@ -1,0 +1,8 @@
+<openpanel.module.awstats>
+
+	<config>
+		<amavis:dbfile>/etc/openpanel/amavis/amavis.db</amavis:dbfile>
+		<postfix:accessfile>/etc/postfix/openpanel/amavis/access</postfix:accessfile>
+	</config>
+	
+</openpanel.module.awstats>

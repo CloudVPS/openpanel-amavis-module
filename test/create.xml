@@ -1,0 +1,15 @@
+444
+<openpanel.module.amavis>
+	<string id="OpenCORE:Command">update</string>
+	<dict id="OpenCORE:Session">
+		<string id="classid">Mail:Amavis</string>
+		<string id="objectid">152f9481-9903-4ffe-a580-09c29e0f0133</string>
+	</dict>
+	<dict id="Domain" type="class">
+		<string id="id">pukkelkont.nl</string>
+	</dict>                 	
+	<dict id="Mail" />
+	<dict id="Mail:Amavis">
+		<string id="enabled">true</string>
+	</dict>
+</openpanel.module.amavis>

@@ -1,0 +1,139 @@
+#!/bin/sh
+cd /
+postconf -e 'content_filter='
+/var/opencore/bin/postarray addrestriction "check_recipient_access hash:/etc/postfix/openpanel/amavis/access"
+grep "smtp-amavis" /etc/postfix/master.cf >/dev/null 2>&1 || {
+  cat >> /etc/postfix/master.cf << _EOF_
+smtp-amavis unix - - n - 2 smtp
+ -o smtp_data_done_timeout=1200
+ -o disable_dns_lookups=yes
+
+127.0.0.1:10025 inet n - n - - smtpd
+ -o content_filter=
+ -o local_recipient_maps=
+ -o relay_recipient_maps=
+ -o smtpd_restriction_classes=
+ -o smtpd_client_restrictions=
+ -o smtpd_helo_restrictions=
+ -o smtpd_sender_restrictions=
+ -o smtpd_recipient_restrictions=permit_mynetworks,reject
+ -o mynetworks=127.0.0.0/8
+_EOF_
+}
+grep "Openpanel" /etc/amavisd.conf >/dev/null 2>&1 && exit 0
+grep "^TCPAddr" /etc/clamd.conf && {
+  cp -p /etc/clamd.conf /etc/clamd.conf.orig
+  cat /etc/clamd.conf.orig | \
+  	sed -e "s/^#LocalSocket/LocalSocket/;s/^TCPSocket/#TCPSocket/" \
+  		> /etc/clamd.conf
+}
+grep "lookup_sql_dsn" /etc/amavisd.conf >/dev/null 2>&1 || {
+patch -p0 << _EOF_
+*** /etc/amavisd.conf.orig	2006-12-27 16:03:01.000000000 +0100
+--- /etc/amavisd.conf	2006-10-16 13:10:40.000000000 +0200
+***************
+*** 33,38 ****
+--- 33,42 ----
+  # \$pid_file  = "\$MYHOME/var/amavisd.pid";   # -P
+  #NOTE: create directories \$MYHOME/tmp, \$MYHOME/var, \$MYHOME/db manually
+  
++ @lookup_sql_dsn =
++      ( ["DBI:SQLite:dbname=/etc/openpanel/amavis/amavis.db", '', ''] );
++ 
++ 
+  @local_domains_maps = ( [".\$mydomain"] );
+  # @mynetworks = qw( 127.0.0.0/8 [::1] [FE80::]/10 [FEC0::]/10
+  #                   10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 );
+***************
+*** 45,51 ****
+  \$syslog_priority = 'debug';  # Syslog base (minimal) priority as a string,
+             # choose from: emerg, alert, crit, err, warning, notice, info, debug
+  
+! \$enable_db = 1;              # enable use of BerkeleyDB/libdb (SNMP and nanny)
+  \$enable_global_cache = 1;    # enable use of libdb-based cache if \$enable_db=1
+  
+  \$inet_socket_port = 10024;   # listen on this local TCP port(s) (see \$protocol)
+--- 49,55 ----
+  \$syslog_priority = 'debug';  # Syslog base (minimal) priority as a string,
+             # choose from: emerg, alert, crit, err, warning, notice, info, debug
+  
+! \$enable_db = 0;              # enable use of BerkeleyDB/libdb (SNMP and nanny)
+  \$enable_global_cache = 1;    # enable use of libdb-based cache if \$enable_db=1
+  
+  \$inet_socket_port = 10024;   # listen on this local TCP port(s) (see \$protocol)
+***************
+*** 93,98 ****
+--- 97,103 ----
+  
+  \$path = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/sbin:/usr/bin:/bin';
+  # \$dspam = 'dspam';
++ # \$dspam = 'spamd';
+  
+  \$MAXLEVELS = 14;
+  \$MAXFILES = 1500;
+***************
+*** 112,119 ****
+  
+  # \$myhostname = 'host.example.com';  # must be a fully-qualified domain name!
+  
+! # \$notify_method  = 'smtp:[127.0.0.1]:10025';
+! # \$forward_method = 'smtp:[127.0.0.1]:10025';  # set to undef with milter!
+  
+  # \$final_virus_destiny      = D_DISCARD;
+  # \$final_banned_destiny     = D_BOUNCE;
+--- 117,126 ----
+  
+  # \$myhostname = 'host.example.com';  # must be a fully-qualified domain name!
+  
+! # >> Openpanel
+! \$notify_method  = 'smtp:[127.0.0.1]:10025';
+! \$forward_method = 'smtp:[127.0.0.1]:10025';  # set to undef with milter!
+! # << Openpanel
+  
+  # \$final_virus_destiny      = D_DISCARD;
+  # \$final_banned_destiny     = D_BOUNCE;
+***************
+*** 317,332 ****
+  # ### http://www.csupomona.edu/~henson/www/projects/SAVI-Perl/
+  # ['Sophos SAVI', \&sophos_savi ],
+  
+  # ### http://www.clamav.net/
+! # ['ClamAV-clamd',
+! #   \&ask_daemon, ["CONTSCAN {}\n", "/var/run/clamav/clamd"],
+! #   qr/\bOK\$/, qr/\bFOUND\$/,
+! #   qr/^.*?: (?!Infected Archive)(.*) FOUND\$/ ],
+  # # NOTE: run clamd under the same user as amavisd, or run it under its own
+  # #   uid such as clamav, add user clamav to the amavis group, and then add
+  # #   AllowSupplementaryGroups to clamd.conf;
+  # # NOTE: match socket name (LocalSocket) in clamav.conf to the socket name in
+  # #   this entry; when running chrooted one may prefer socket "\$MYHOME/clamd".
+  
+  # ### http://www.clamav.net/ and CPAN  (memory-hungry! clamd is preferred)
+  # ['Mail::ClamAV', \&ask_clamav, "*", [0], [1], qr/^INFECTED: (.+)/],
+--- 324,341 ----
+  # ### http://www.csupomona.edu/~henson/www/projects/SAVI-Perl/
+  # ['Sophos SAVI', \&sophos_savi ],
+  
++ # >> Openpanel
+  # ### http://www.clamav.net/
+!  ['ClamAV-clamd',
+!    \&ask_daemon, ["CONTSCAN {}\n", "/var/run/clamav/clamd.sock"],
+!    qr/\bOK\$/, qr/\bFOUND\$/,
+!    qr/^.*?: (?!Infected Archive)(.*) FOUND\$/ ],
+  # # NOTE: run clamd under the same user as amavisd, or run it under its own
+  # #   uid such as clamav, add user clamav to the amavis group, and then add
+  # #   AllowSupplementaryGroups to clamd.conf;
+  # # NOTE: match socket name (LocalSocket) in clamav.conf to the socket name in
+  # #   this entry; when running chrooted one may prefer socket "\$MYHOME/clamd".
++ # << Openpanel
+  
+  # ### http://www.clamav.net/ and CPAN  (memory-hungry! clamd is preferred)
+  # ['Mail::ClamAV', \&ask_clamav, "*", [0], [1], qr/^INFECTED: (.+)/],
+_EOF_
+}
+cp -p /etc/amavisd.conf /etc/amavisd.conf.orig
+cat /etc/amavisd.conf.orig | \
+	sed -e "s/^# \$final_spam_destiny.*/\$final_spam_destiny = D_PASS;/" \
+		> /etc/amavisd.conf
+
+chgrp amavis /etc/amavisd.conf
