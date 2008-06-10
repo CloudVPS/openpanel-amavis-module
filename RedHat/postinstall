@@ -1,25 +1,7 @@
 #!/bin/sh
 cd /
-postconf -e 'content_filter='
-/var/opencore/bin/postarray addrestriction "check_recipient_access hash:/etc/postfix/openpanel/amavis/access"
-grep "smtp-amavis" /etc/postfix/master.cf >/dev/null 2>&1 || {
-  cat >> /etc/postfix/master.cf << _EOF_
-smtp-amavis unix - - n - 2 smtp
- -o smtp_data_done_timeout=1200
- -o disable_dns_lookups=yes
+/var/opencore/modules/Amavis.module/fixconfig
 
-127.0.0.1:10025 inet n - n - - smtpd
- -o content_filter=
- -o local_recipient_maps=
- -o relay_recipient_maps=
- -o smtpd_restriction_classes=
- -o smtpd_client_restrictions=
- -o smtpd_helo_restrictions=
- -o smtpd_sender_restrictions=
- -o smtpd_recipient_restrictions=permit_mynetworks,reject
- -o mynetworks=127.0.0.0/8
-_EOF_
-}
 grep "Openpanel" /etc/amavisd.conf >/dev/null 2>&1 && exit 0
 grep "^TCPAddr" /etc/clamd.conf && {
   cp -p /etc/clamd.conf /etc/clamd.conf.orig
