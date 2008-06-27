@@ -219,7 +219,7 @@ bool amavismodule::writeconfiguration (const value &v)
 	
 	if (v["OpenCORE:Command"] != "delete" && amavisdb.getlasterror().strlen() > 0)
 	{
-		string 	err = "SQLite database error: ";
+		string 	err = "Amavis database error: ";
 			 	err.strcat (amavisdb.getlasterror());
 		
 		sendresult( moderr::err_unknown, err);
