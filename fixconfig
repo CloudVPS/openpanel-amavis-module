@@ -7,4 +7,13 @@ setup_postfix_conf() {
 	/var/opencore/bin/masterconf set 127.0.0.1:10025 "inet n - n - - smtpd -o content_filter= -o local_recipient_maps= -o relay_recipient_maps= -o smtpd_restriction_classes= -o smtpd_client_restrictions= -o smtpd_helo_restrictions= -o smtpd_sender_restrictions= -o smtpd_recipient_restrictions=permit_mynetworks,reject -o mynetworks=127.0.0.0/8"
 }
 
+setup_accessdb() {
+	if [ ! -e /etc/postfix/openpanel/amavis/access.db ]; then
+		touch /etc/postfix/openpanel/amavis/access
+		postmap /etc/postfix/openpanel/amavis/access
+	fi
+}
+
 setup_postfix_conf
+setup_accessdb
+
