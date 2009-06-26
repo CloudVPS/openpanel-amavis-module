@@ -24,6 +24,7 @@ class Mail:Amavis			< uuid 6c034f34-5d50-44f3-b2f5-a60a65f5cc35
 							< description Amavis virus and spam filter
 							< explanation amavis.html
 							< emptytext Mail filtering has not been configured for this domain yet.
+							< formmargin -15
 
 							< capabilities create delete update
 							
