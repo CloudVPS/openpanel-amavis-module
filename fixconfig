@@ -11,6 +11,10 @@ setup_accessdb() {
 	if [ ! -e /etc/postfix/openpanel/amavis/access.db ]; then
 		touch /etc/postfix/openpanel/amavis/access
 		postmap /etc/postfix/openpanel/amavis/access
+		chgrp opencore /etc/postfix/openpanel/amavis/access
+		chgrp opencore /etc/postfix/openpanel/amavis/access.db
+		chmod 664 /etc/postfix/openpanel/amavis/access
+		chmod 664 /etc/postfix/openpanel/amavis/access.db
 	fi
 }
 
