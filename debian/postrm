@@ -1,0 +1,13 @@
+#!/bin/sh
+# postrm framework for openpanel packages
+#
+# see: dh_installdeb(1)
+
+set -e
+
+/var/opencore/bin/postarray delrestriction hash:/etc/postfix/openpanel/amavis/access
+#DEBHELPER#
+
+exit 0
+
+
