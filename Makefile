@@ -13,7 +13,7 @@ version.cpp:
 
 amavismodule.exe: $(OBJ)
 	$(LD) $(LDFLAGS) -o amavismodule.exe $(OBJ) $(LIBS) \
-	../opencore/api/c++/lib/libcoremodule.a -lz -lssl -lsqlite3
+	/usr/lib/opencore/libcoremodule.a -lz -lsqlite3
 
 clean:
 	rm -f *.o *.exe
@@ -22,4 +22,4 @@ clean:
 
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -I../opencore/api/c++/include -c -g $<
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -I/usr/include/opencore -c -g $<

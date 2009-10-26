@@ -1,0 +1,3 @@
+var/opencore/modules/Amavis.module
+etc/openpanel/amavis
+etc/amavis/conf.d

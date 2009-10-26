@@ -1,27 +1,27 @@
 #!/usr/bin/make -f
 
+build: build-stamp
+build-stamp:
+	./configure
+	make
+	touch build-stamp
 
-BUILD_ROOT=$(CURDIR)/debian/tmp
-install:
-trm -rf ${BUILD_ROOT}
-tmkdir -p ${BUILD_ROOT}/var/opencore/modules/Amavis.module
-tcp -rf ./amavismodule.app ${BUILD_ROOT}/var/opencore/modules/Amavis.module/
-tcp module.xml ${BUILD_ROOT}/var/opencore/modules/Amavis.module/module.xml
-tcp *.html ${BUILD_ROOT}/var/opencore/modules/Amavis.module/
-tmkdir -p ${BUILD_ROOT}/etc/openpanel/amavis
-tinstall -m 664 etc/sqlite.in ${BUILD_ROOT}/etc/openpanel/amavis/sqlite.in
-tinstall -m 755 verify ${BUILD_ROOT}/var/opencore/modules/Amavis.module/verify
-tinstall -m 755 fixconfig ${BUILD_ROOT}/var/opencore/modules/Amavis.module/fixconfig
-tmkdir -p ${BUILD_ROOT}/etc/amavis/conf.d/
-tcp -f ./etc/debian-amavis ${BUILD_ROOT}/etc/amavis/conf.d/
+install: install-stamp
+install-stamp: build-stamp
+	dh_testdir
+	dh_testroot
+	dh_installdirs
+	cp -rf ./amavismodule.app debian/openpanel-mod-amavis//var/opencore/modules/Amavis.module/
+	cp module.xml debian/openpanel-mod-amavis/var/opencore/modules/Amavis.module/module.xml
+	cp *.html debian/openpanel-mod-amavis/var/opencore/modules/Amavis.module/
+	install -m 664 etc/sqlite.in debian/openpanel-mod-amavis/etc/openpanel/amavis/sqlite.in
+	install -m 755 verify debian/openpanel-mod-amavis/var/opencore/modules/Amavis.module/verify
+	install -m 755 fixconfig debian/openpanel-mod-amavis/var/opencore/modules/Amavis.module/fixconfig
+	cp -f ./etc/debian-amavis debian/openpanel-mod-amavis/etc/amavis/conf.d/
+	
+binary-indep: build install
 
-build:
-t./configure
-tmake
-binary-indep:
-
-binary-arch binary: build install
-	if [ -d debian/tmp ] ; then dh_install -a --sourcedir=debian/tmp ; fi
+binary-arch: build install
 	dh_installdocs -a
 	dh_installdeb -a
 	dh_compress -a
@@ -30,5 +30,12 @@ binary-arch binary: build install
 	dh_gencontrol -a
 	dh_md5sums -a
 	dh_builddeb -a
+
+binary: binary-arch binary-indep
+
+clean:
+	rm -f build-stamp install-stamp
+	[ ! -f makeinclude ] || make clean
+	dh_clean
 
 .PHONY: build binary binary-arch binary-indep clean install
