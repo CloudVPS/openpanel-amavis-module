@@ -3,13 +3,13 @@ include makeinclude
 OBJ	= main.o sqlite_db.o cfgamavis.o version.o
 
 all: module.xml amavismodule.exe
-	mkapp amavismodule 
+	grace mkapp amavismodule 
 
 module.xml: module.def
 	mkmodulexml < module.def > module.xml
 
 version.cpp:
-	mkversion version.cpp
+	grace mkversion version.cpp
 
 amavismodule.exe: $(OBJ)
 	$(LD) $(LDFLAGS) -o amavismodule.exe $(OBJ) $(LIBS) \
