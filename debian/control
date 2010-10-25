@@ -2,7 +2,7 @@ Source: openpanel-mod-amavis
 Section: misc
 Priority: optional
 Maintainer: OpenPanel/Panel6 packager <packages@panelsix.com>
-Build-Depends: debhelper (>= 5), libgrace-dbfile-devel, libgrace-devel, libgrace-dbfile, openpanel-mkmodulexml, openpanel-devel, libsqlite3-dev, libdb4.6-dev, zlib1g-dev, libgdbm-dev
+Build-Depends: debhelper (>= 5), libgrace-dbfile, libgrace-dbfile-devel, libgrace, libgrace-devel,  openpanel-mkmodulexml, openpanel-devel, libsqlite3-dev, libdb4.6-dev, zlib1g-dev, libgdbm-dev
 Standards-Version: 3.7.2
 
 Package: openpanel-mod-amavis
