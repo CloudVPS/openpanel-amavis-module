@@ -22,7 +22,7 @@ version.cpp:
 
 amavismodule.exe: $(OBJ)
 	$(LD) $(LDFLAGS) -o amavismodule.exe $(OBJ) $(LIBS) \
-	/usr/lib/opencore/libcoremodule.a -lz -lsqlite3
+	/usr/lib/opencore/libcoremodule.a -lsqlite3
 
 clean:
 	rm -f *.o *.exe
