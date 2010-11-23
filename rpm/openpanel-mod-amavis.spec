@@ -48,20 +48,20 @@ make
 %install
 BUILD_ROOT=$RPM_BUILD_ROOT
 rm -rf ${BUILD_ROOT}
-mkdir -p ${BUILD_ROOT}/var/opencore/modules/Amavis.module
-cp -rf ./amavismodule.app ${BUILD_ROOT}/var/opencore/modules/Amavis.module/
-cp module.xml ${BUILD_ROOT}/var/opencore/modules/Amavis.module/module.xml
-cp *.html ${BUILD_ROOT}/var/opencore/modules/Amavis.module/
+mkdir -p ${BUILD_ROOT}/var/openpanel/modules/Amavis.module
+cp -rf ./amavismodule.app ${BUILD_ROOT}/var/openpanel/modules/Amavis.module/
+cp module.xml ${BUILD_ROOT}/var/openpanel/modules/Amavis.module/module.xml
+cp *.html ${BUILD_ROOT}/var/openpanel/modules/Amavis.module/
 mkdir -p ${BUILD_ROOT}/etc/openpanel/amavis
 install -m 664 etc/sqlite.in ${BUILD_ROOT}/etc/openpanel/amavis/sqlite.in
-install -m 755 verify ${BUILD_ROOT}/var/opencore/modules/Amavis.module/verify
-install -m 755 fixconfig ${BUILD_ROOT}/var/opencore/modules/Amavis.module/fixconfig
-install -m 755 RedHat/postinstall ${BUILD_ROOT}/var/opencore/modules/Amavis.module/postinstall
+install -m 755 verify ${BUILD_ROOT}/var/openpanel/modules/Amavis.module/verify
+install -m 755 fixconfig ${BUILD_ROOT}/var/openpanel/modules/Amavis.module/fixconfig
+install -m 755 RedHat/postinstall ${BUILD_ROOT}/var/openpanel/modules/Amavis.module/postinstall
 
 %post
-mkdir -p /var/opencore/conf/staging/Amavis
+mkdir -p /var/openpanel/conf/staging/Amavis
 chmod 775 /etc/openpanel/amavis
-chown opencore:authd /var/opencore/conf/staging/Amavis
+chown openpanel-core:openpanel-authd /var/openpanel/conf/staging/Amavis
 chown -R amavis:opencore /etc/openpanel/amavis/
 [ -e /etc/openpanel/amavis/amavis.db ] || sqlite3 /etc/openpanel/amavis/amavis.db < /etc/openpanel/amavis/sqlite.in
 chmod 664 /etc/openpanel/amavis/amavis.db
@@ -69,7 +69,7 @@ chgrp opencore /etc/openpanel/amavis/amavis.db
 mkdir -p /etc/postfix/openpanel/amavis
 chgrp opencore /etc/postfix/openpanel/amavis
 chmod g+w /etc/postfix/openpanel/amavis
-/var/opencore/modules/Amavis.module/postinstall
+/var/openpanel/modules/Amavis.module/postinstall
 service postfix reload >/dev/null 2>&1
 chkconfig --level 2345 spamassassin on
 service spamassassin restart >/dev/null 2>&1 || echo "spamassassin failure"
@@ -77,7 +77,7 @@ chkconfig --level 2345 spamd on
 service clamd restart >/dev/null 2>&1 || echo "clamd failure"
 chkconfig --level 2345 amavisd on
 service amavisd restart >/dev/null 2>&1 || echo "amavis failure"
-      ln -sf /var/opencore/modules/Amavis.module/amavismodule.app/exec /var/opencore/modules/Amavis.module/action
+      ln -sf /var/openpanel/modules/Amavis.module/amavismodule.app/exec /var/openpanel/modules/Amavis.module/action
 
 %files
 %defattr(-,root,root)

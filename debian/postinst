@@ -28,9 +28,9 @@ set -e
 
 case "$1" in
     configure)
-        mkdir -p /var/opencore/conf/staging/Amavis
+        mkdir -p /var/openpanel/conf/staging/Amavis
         chmod 775 /etc/openpanel/amavis
-        chown opencore:authd /var/opencore/conf/staging/Amavis
+        chown openpanel-core:openpanel-authd /var/openpanel/conf/staging/Amavis
         chown -R amavis:opencore /etc/openpanel/amavis/
         [ -e /etc/openpanel/amavis/amavis.db ] || sqlite3 /etc/openpanel/amavis/amavis.db < /etc/openpanel/amavis/sqlite.in
         chmod 664 /etc/openpanel/amavis/amavis.db
@@ -38,10 +38,10 @@ case "$1" in
         mkdir -p /etc/postfix/openpanel/amavis
         chgrp opencore /etc/postfix/openpanel/amavis
         chmod g+w /etc/postfix/openpanel/amavis
-        ln -sf /var/opencore/modules/Amavis.module/amavismodule.app/exec /var/opencore/modules/Amavis.module/action
-        [ -e /var/opencore/modules/Amavis.module/action ] || ln -sf /var/opencore/modules/Amavis.module/amavismodule.app/exec /var/opencore/modules/Amavis.module/action
+        ln -sf /var/openpanel/modules/Amavis.module/amavismodule.app/exec /var/openpanel/modules/Amavis.module/action
+        [ -e /var/openpanel/modules/Amavis.module/action ] || ln -sf /var/openpanel/modules/Amavis.module/amavismodule.app/exec /var/openpanel/modules/Amavis.module/action
         chmod 664 /etc/openpanel/amavis/amavis.db ; chmod 775 /etc/openpanel/amavis
-        /var/opencore/modules/Amavis.module/fixconfig
+        /var/openpanel/modules/Amavis.module/fixconfig
         invoke-rc.d postfix restart
         invoke-rc.d clamav-daemon restart
         invoke-rc.d amavis restart

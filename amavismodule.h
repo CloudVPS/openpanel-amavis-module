@@ -11,7 +11,7 @@
 #ifndef _amavismodule_H
 #define _amavismodule_H 1
 
-#include <opencore/moduleapp.h>
+#include <openpanel-core/moduleapp.h>
 #include <grace/system.h>
 #include <grace/configdb.h>
 

@@ -22,13 +22,24 @@ version.cpp:
 
 amavismodule.exe: $(OBJ)
 	$(LD) $(LDFLAGS) -o amavismodule.exe $(OBJ) $(LIBS) \
-	/usr/lib/opencore/libcoremodule.a -lsqlite3
+	/usr/lib/openpanel-core/libcoremodule.a -lsqlite3
+
+install:
+	cp -rf ./amavismodule.app debian/openpanel-mod-amavis//var/openpanel/modules/Amavis.module/
+	cp module.xml debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/module.xml
+	cp *.html debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/
+	install -m 664 etc/sqlite.in debian/openpanel-mod-amavis/etc/openpanel/amavis/sqlite.in
+	install -m 755 verify debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/verify
+	install -m 755 fixconfig debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/fixconfig
+	cp -f ./etc/debian-amavis debian/openpanel-mod-amavis/etc/amavis/conf.d/
+
 
 clean:
 	rm -f *.o *.exe
 	rm -rf amavismodule.app
 	rm -f amavismodule
 
+
 SUFFIXES: .cpp .o
 .cpp.o:
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -I/usr/include/opencore -c -g $<
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c -g $<

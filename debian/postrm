@@ -10,7 +10,7 @@
 
 set -e
 
-/var/opencore/bin/postarray delrestriction hash:/etc/postfix/openpanel/amavis/access
+/var/openpanel/bin/postarray delrestriction hash:/etc/postfix/openpanel/amavis/access
 #DEBHELPER#
 
 exit 0

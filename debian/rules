@@ -20,12 +20,12 @@ install-stamp: build-stamp
 	dh_testdir
 	dh_testroot
 	dh_installdirs
-	cp -rf ./amavismodule.app debian/openpanel-mod-amavis//var/opencore/modules/Amavis.module/
-	cp module.xml debian/openpanel-mod-amavis/var/opencore/modules/Amavis.module/module.xml
-	cp *.html debian/openpanel-mod-amavis/var/opencore/modules/Amavis.module/
+	cp -rf ./amavismodule.app debian/openpanel-mod-amavis//var/openpanel/modules/Amavis.module/
+	cp module.xml debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/module.xml
+	cp *.html debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/
 	install -m 664 etc/sqlite.in debian/openpanel-mod-amavis/etc/openpanel/amavis/sqlite.in
-	install -m 755 verify debian/openpanel-mod-amavis/var/opencore/modules/Amavis.module/verify
-	install -m 755 fixconfig debian/openpanel-mod-amavis/var/opencore/modules/Amavis.module/fixconfig
+	install -m 755 verify debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/verify
+	install -m 755 fixconfig debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/fixconfig
 	cp -f ./etc/debian-amavis debian/openpanel-mod-amavis/etc/amavis/conf.d/
 	
 binary-indep: build install
