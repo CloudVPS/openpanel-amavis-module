@@ -31,6 +31,7 @@ install:
 	ln -sf amavismodule.app/exec ${DESTDIR}/var/openpanel/modules/Amavis.module/action
 	cp     module.xml          ${DESTDIR}/var/openpanel/modules/Amavis.module/module.xml
 	install -m 755 verify      ${DESTDIR}/var/openpanel/modules/Amavis.module/verify
+	cp *.html ${DESTDIR}/var/openpanel/modules/Amavis.module
 
 
 clean:
