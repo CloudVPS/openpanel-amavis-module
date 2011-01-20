@@ -25,13 +25,12 @@ amavismodule.exe: $(OBJ)
 	/usr/lib/openpanel-core/libcoremodule.a -lsqlite3
 
 install:
-	cp -rf ./amavismodule.app debian/openpanel-mod-amavis//var/openpanel/modules/Amavis.module/
-	cp module.xml debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/module.xml
-	cp *.html debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/
-	install -m 664 etc/sqlite.in debian/openpanel-mod-amavis/etc/openpanel/amavis/sqlite.in
-	install -m 755 verify debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/verify
-	install -m 755 fixconfig debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/fixconfig
-	cp -f ./etc/debian-amavis debian/openpanel-mod-amavis/etc/amavis/conf.d/
+	mkdir -p ${DESTDIR}/var/openpanel/modules/Amavis.module
+	mkdir -p ${DESTDIR}/var/openpanel/conf/staging/Amavis
+	cp -rf ./amavismodule.app    ${DESTDIR}/var/openpanel/modules/Amavis.module/
+	ln -sf amavismodule.app/exec ${DESTDIR}/var/openpanel/modules/Amavis.module/action
+	cp     module.xml          ${DESTDIR}/var/openpanel/modules/Amavis.module/module.xml
+	install -m 755 verify      ${DESTDIR}/var/openpanel/modules/Amavis.module/verify
 
 
 clean:
