@@ -24,10 +24,10 @@ postconf -h smtpd_recipient_restrictions | grep -wq 'check_recipient_access hash
   exit 1
 }
 
-postconf -h content_filter | grep . && {
-  echo "global content_filter specified, please disable"
-  echo "quit" >&3
-  exit 1
-}
+#postconf -h content_filter | grep . && {
+#  echo "global content_filter specified, please disable"
+#  echo "quit" >&3
+#  exit 1
+#}
 
 exit 0

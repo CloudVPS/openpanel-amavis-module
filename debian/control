@@ -2,12 +2,12 @@ Source: openpanel-mod-amavis
 Section: misc
 Priority: optional
 Maintainer: OpenPanel packager <packages@openpanel.com>
-Build-Depends: debhelper (>= 5), libgrace-dbfile-dev, libgrace-dev, openpanel-dev, libsqlite3-dev, libdb4.6-dev, libgdbm-dev
+Build-Depends: debhelper (>= 5), libgrace-dbfile-dev, libgrace-dev, openpanel-dev, libsqlite3-dev
 Standards-Version: 3.7.2
 
 Package: openpanel-mod-amavis
 Architecture: any
-Pre-Depends: openpanel-core, openpanel-authd
-Depends: openpanel-core (>= 0.8.3), openpanel-mod-postfixcourier (>= 0.8.3), amavisd-new, spamassassin, clamav, sqlite3, clamav-data, clamav-daemon, libdbd-sqlite3-perl, ${shlibs:Depends}, ${misc:Depends}
+Pre-Depends: openpanel-core, openpanel-authd, openpanel-mod-postfixcourier
+Depends: openpanel-core (>= 0.8.3), amavisd-new, spamassassin, sqlite3, libdbd-sqlite3-perl, ${shlibs:Depends}, ${misc:Depends}
 Description: Openpanel module to manage Amavis
- This module can add mail/virusscan capabilities to email domains in OpenPanel
+ This module can add spam detection capabilities to email domains in OpenPanel

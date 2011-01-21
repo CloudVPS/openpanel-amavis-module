@@ -2,6 +2,5 @@ cxx
 pthread
 libsocket
 unixflavor
-db4
 grace
 dbfile

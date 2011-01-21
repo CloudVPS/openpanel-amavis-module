@@ -1,50 +1,7 @@
 #!/usr/bin/make -f
 
-# This file is part of OpenPanel - The Open Source Control Panel
-# OpenPanel is free software: you can redistribute it and/or modify it 
-# under the terms of the GNU General Public License as published by the Free 
-# Software Foundation, using version 3 of the License.
-#
-# Please note that use of the OpenPanel trademark may be subject to additional 
-# restrictions. For more information, please visit the Legal Information 
-# section of the OpenPanel website on http://www.openpanel.com/
+#export DH_VERBOSE=1
 
-build: build-stamp
-build-stamp:
-	./configure
-	make
-	touch build-stamp
+%:
+	dh $@
 
-install: install-stamp
-install-stamp: build-stamp
-	dh_testdir
-	dh_testroot
-	dh_installdirs
-	cp -rf ./amavismodule.app debian/openpanel-mod-amavis//var/openpanel/modules/Amavis.module/
-	cp module.xml debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/module.xml
-	cp *.html debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/
-	install -m 664 etc/sqlite.in debian/openpanel-mod-amavis/etc/openpanel/amavis/sqlite.in
-	install -m 755 verify debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/verify
-	install -m 755 fixconfig debian/openpanel-mod-amavis/var/openpanel/modules/Amavis.module/fixconfig
-	cp -f ./etc/debian-amavis debian/openpanel-mod-amavis/etc/amavis/conf.d/
-	
-binary-indep: build install
-
-binary-arch: build install
-	dh_installdocs -a
-	dh_installdeb -a
-	dh_compress -a
-	dh_fixperms -a
-	dh_shlibdeps -a
-	dh_gencontrol -a
-	dh_md5sums -a
-	dh_builddeb -a
-
-binary: binary-arch binary-indep
-
-clean:
-	rm -f build-stamp install-stamp
-	[ ! -f makeinclude ] || make clean
-	dh_clean
-
-.PHONY: build binary binary-arch binary-indep clean install

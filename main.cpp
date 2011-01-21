@@ -170,7 +170,7 @@ bool amavismodule::writeconfiguration (const value &v)
 	// Choose action pending on the requested command
 	if (v["OpenCORE:Command"] == "delete")
 	{
-		amavisdb.removedomain (v["Mail"]["id"].sval());
+		amavisdb.removedomain (v["Domain"]["id"].sval());
 
 		// remove the domain from the database
 		// handle aliasdomains
@@ -189,19 +189,24 @@ bool amavismodule::writeconfiguration (const value &v)
 		// the given domain
 		if (v["Mail:Amavis"]["enabled"] == "true")
 		{
-			amavisdb.enabledomain (v["Mail"]["id"].sval());
+			double subjecttreshold = data["Mail"]["label_at"].dval();
+			double rejecttreshold = data["Mail"]["reject_at"].dval();
+
+			amavisdb.enabledomain (v["Domain"]["id"].sval(),subjecttreshold,rejecttreshold);
+			
 			foreach(aliasdoms, data["Domain"]["Domain:Alias"])
 			{
 				string dom2;
 				dom2 = subdom;
 				dom2.strcat(aliasdoms["id"].sval());
-				amavisdb.enabledomain(dom2);
+				
+				amavisdb.enabledomain(dom2,subjecttreshold,rejecttreshold);
 			}
 			
 		}
 		else
 		{	
-			amavisdb.disabledomain (v["Mail"]["id"].sval());	
+			amavisdb.disabledomain (v["Domain"]["id"].sval());	
 			foreach(aliasdoms, data["Domain"]["Domain:Alias"])
 			{
 				string dom2;
@@ -285,13 +290,22 @@ bool amavismodule::checkconfig (value &v)
 	
 	// Mail.Amavis should contain a file enabled which is true/false
 	// empty field will be false by default
-	if (! v["Mail:Amavis"].exists ("enabled"))
+	if (! v["Mail:Amavis"].exists ("label_at"))
 	{
 		sendresult (err_value, 
-					"Missing field `enabled` field in `Mail.Amavis`");
+					"Missing field `label_at` field in `Mail.Amavis`");
 		return false;
 	}
 	
+	// Mail.Amavis should contain a file enabled which is true/false
+	// empty field will be false by default
+	if (! v["Mail:Amavis"].exists ("reject_at"))
+	{
+		sendresult (err_value, 
+					"Missing field `reject_at` field in `Mail.Amavis`");
+		return false;
+	}
+		
 	
 	// No errors during validation, 
 	// main () will proceed request

@@ -1,8 +1,8 @@
 @lookup_sql_dsn =
      ( ["DBI:SQLite:dbname=/etc/openpanel/amavis/amavis.db", '', ''] );
  
-$notify_method  = 'smtp:[127.0.0.1]:10025';
-$forward_method = 'smtp:[127.0.0.1]:10025';  # set to undef with milter!
+$notify_method  = 'smtp:[127.0.0.1]:10024';
+$forward_method = 'smtp:[127.0.0.1]:10024';  # set to undef with milter!
 use strict;
 
 @bypass_virus_checks_maps = (
@@ -15,4 +15,4 @@ use strict;
 $final_spam_destiny = D_PASS;
 $final_virus_destiny = D_DISCARD;
 
-1;  # insure a defined return
+1;  # ensure a defined return

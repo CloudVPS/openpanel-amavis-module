@@ -28,25 +28,26 @@ set -e
 
 case "$1" in
     configure)
-        mkdir -p /var/openpanel/conf/staging/Amavis
-        chmod 775 /etc/openpanel/amavis
-        chown openpanel-core:openpanel-authd /var/openpanel/conf/staging/Amavis
-        chown -R amavis:opencore /etc/openpanel/amavis/
-        [ -e /etc/openpanel/amavis/amavis.db ] || sqlite3 /etc/openpanel/amavis/amavis.db < /etc/openpanel/amavis/sqlite.in
-        chmod 664 /etc/openpanel/amavis/amavis.db
-        chgrp opencore /etc/openpanel/amavis/amavis.db
-        mkdir -p /etc/postfix/openpanel/amavis
-        chgrp opencore /etc/postfix/openpanel/amavis
-        chmod g+w /etc/postfix/openpanel/amavis
-        ln -sf /var/openpanel/modules/Amavis.module/amavismodule.app/exec /var/openpanel/modules/Amavis.module/action
-        [ -e /var/openpanel/modules/Amavis.module/action ] || ln -sf /var/openpanel/modules/Amavis.module/amavismodule.app/exec /var/openpanel/modules/Amavis.module/action
-        chmod 664 /etc/openpanel/amavis/amavis.db ; chmod 775 /etc/openpanel/amavis
-        /var/openpanel/modules/Amavis.module/fixconfig
-        invoke-rc.d postfix restart
-        invoke-rc.d clamav-daemon restart
-        invoke-rc.d amavis restart
-        invoke-rc.d openpanel-core reload
+        if [ ! -e /etc/openpanel/amavis/amavis.db ]; then
+            sqlite3 /etc/openpanel/amavis/amavis.db < /etc/openpanel/amavis/sqlite.in
+            chmod 664            /etc/openpanel/amavis/amavis.db
+        fi
 
+        chmod 775                      /etc/openpanel/amavis
+        chown -R amavis:openpanel-core /etc/openpanel/amavis
+
+        mkdir -p              /var/openpanel/conf/staging/Amavis
+        chown openpanel-core  /var/openpanel/conf/staging/Amavis
+        chgrp openpanel-authd /var/openpanel/conf/staging/Amavis
+
+        mkdir -p             /etc/postfix/openpanel/amavis
+        chgrp openpanel-core /etc/postfix/openpanel/amavis
+        chmod 775            /etc/postfix/openpanel/amavis
+
+        /var/openpanel/modules/Amavis.module/fixconfig
+
+        invoke-rc.d postfix restart
+        invoke-rc.d amavis restart
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

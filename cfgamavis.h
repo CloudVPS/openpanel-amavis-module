@@ -30,7 +30,7 @@ class cfgamavis : public sqlite_db
 					 }
 	
 	
-		bool		 enabledomain (const string &domain);
+		bool		 enabledomain (const string &domain, double treshold_subject, double treshold_kill);
 		bool		 disabledomain (const string &domain);
 		bool 		 removedomain (const string &domain);
 	

@@ -12,7 +12,7 @@
 module Amavis				< uuid 3ff9d8be-d651-4fff-a014-1962e38ab767
 							< version 1.0
 							< languages en_EN
-							< apitype xml
+							< apitype grace
 							< license GPLv3
 							< author OpenPanel
 							< url http://www.openpanel.com/
@@ -27,15 +27,22 @@ class Mail:Amavis			< uuid 6c034f34-5d50-44f3-b2f5-a60a65f5cc35
 							< uniquein parent
 							< singleton amavis
 							< shortname amavis
-							< title Spam and Virus
-							< description Amavis virus and spam filter
+							< title Spam
+							< description Amavis mail filter
 							< explanation amavis.html
 							< emptytext Mail filtering has not been configured for this domain yet.
 							< formmargin -20
 
 							< capabilities create delete update
 							
-	bool enabled			: Spam and virus filter
-							< paddingtop -25
-							< breakcolumn true
-	string id				: id < flags enabled
+	string label_at 		: Threshold for spam tag in subject
+							< regexp ^[0-9]+(\.[0-9]+)?$
+							< example 4.8
+							< default 5.0
+
+	string reject_at	 	: Threshold for rejecting spam
+							< regexp ^[0-9]+(\.[0-9]+)?$
+							< example 7.1
+							< default 7.0
+
+	

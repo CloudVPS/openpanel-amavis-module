@@ -17,31 +17,34 @@
 //	===========================================================================
 ///	METHOD: cfgamavis::enabledomain
 //	===========================================================================
-bool cfgamavis::enabledomain (const string &domain)
+bool cfgamavis::enabledomain (const string &domain, double treshold_subject, double treshold_kill)
 {
 	db4file DB;
 	string  query;
 			
-	string 	domainmask;
-	domainmask.printf ("@%s", domain.str());
-			
-	// Delete the current domain rule from table users					  
+	// Insert domain as a user rule
+	query.printf (
+		"REPLACE INTO users "
+		"(priority, policy_id, email, fullname, local)"
+		" VALUES "
+		"(7, 5, '@%s', '', 'Y')", domain.str());
+	
 	delete dosqlite (query);
-
-// ::printf ("error: %s\n", getlasterror().str());	
 	
-	query.crop 	 ();
-	query.printf ("REPLACE INTO users VALUES "
-				  "( NULL, 7, 5, '%s', ", domainmask.str());
-	query.printf ("'', 'Y')");
+	query.crop();
+	query.printf( "REPLACE INTO Policy (");
+	query.printf( "id, policy_name, spam_tag2_level,  spam_kill_level");
+	query.printf( ")VALUES(" );
+	query.printf( "(SELECT id FROM users WHERE email = '@%s'),", domain.str());
+	query.printf( "'Rules for %s',", domain.str());
+	query.printf( "%f,%f)",  treshold_subject, treshold_kill);
 	
-	// Insert domain
 	delete dosqlite (query);
 
 // ::printf ("error: %s\n", getlasterror().str());		
 	
+    /*
 	DB.setencoding (dbfile::flat);
-    
     // Open the public database file. Bail out on failure.
     if (! DB.open (_accessdb))
     {
@@ -53,7 +56,7 @@ bool cfgamavis::enabledomain (const string &domain)
 	DB.db[domain.str()] = (string) "FILTER smtp-amavis:[127.0.0.1]:10024";
 	DB.commit ();
 	DB.close ();
-	lasterror = "";
+	lasterror = "";*/
 	return true;
 }
 
@@ -72,19 +75,20 @@ bool cfgamavis::disabledomain (const string &domain)
 //	===========================================================================
 bool cfgamavis::removedomain (const string &domain)
 {
-	db4file DB;
-	string 	domainmask;
-	domainmask.printf ("@%s", domain.str());
-			
 	string  query;
-	query.printf ("DELETE FROM users WHERE email='%s'", 
-						  domainmask.str());
+	query.printf( "DELETE FROM Policy WHERE policy_name = 'Rules for %s'", domain.str(), domain.str() );
+	
+	delete dosqlite (query);
+
+	query.crop();
+	query.printf ("DELETE FROM users WHERE email='@%s'", domain.str());
 						  
 	// Delete the current domain rule from table users					  
 	delete dosqlite (query);
-	
+	 /*
 	DB.setencoding (dbfile::flat);
-    
+       
+
     // Open the public database file. Bail out on failure.
     if (! DB.open (_accessdb))
     {
@@ -97,6 +101,6 @@ bool cfgamavis::removedomain (const string &domain)
 	DB.commit ();
 	DB.close ();
 	
-	lasterror = "";
+	lasterror = ""; */
 	return true;
 }
